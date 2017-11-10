@@ -16,59 +16,56 @@ public class BrainFuckInvoker {
         BrainFuckExpression brainFuckExpression = new BrainFuckExpression();
         LinkedList<Array> stackArrays = new LinkedList<>();
 
+
+        ArrayList<Character>  arrWithoutRepetition = new ArrayList<>();
+        ArrayList<Integer>  countOfOperation = new ArrayList<>();
+
+
         for (int i = 0; i < arr.length; i++) {
             char operation = arr[i];
-            int count = 1;
+            int count= 1;
+            if(operation!='[' && operation!=']')
+                while (i != arr.length - 1 && operation == arr[i + 1]) {
+                    count++;
+                    i++;
+                }
+            arrWithoutRepetition.add(operation);
+            countOfOperation.add(count);
+        }
+        
+        
+        for (int i = 0; i < arrWithoutRepetition.size(); i++) {
+            char operation = arrWithoutRepetition.get(i);
             switch (operation) {
                 case '>':
-                    while (i != arr.length - 1 && operation == arr[i + 1]) {
-                        count++;
-                        i++;
-                    }
                     if (stackArrays.isEmpty())
-                        commands.add(new MoveRight(brainFuckExpression, count));
+                        commands.add(new MoveRight(brainFuckExpression, countOfOperation.get(i)));
                     else
-                        stackArrays.peek().addCommand(new MoveRight(brainFuckExpression, count));
+                        stackArrays.peek().addCommand(new MoveRight(brainFuckExpression, countOfOperation.get(i)));
                     break;
                 case '<':
-                    while (i != arr.length - 1 && operation == arr[i + 1]) {
-                        count++;
-                        i++;
-                    }
                     if (stackArrays.isEmpty())
-                        commands.add(new MoveLeft(brainFuckExpression, count));
+                        commands.add(new MoveLeft(brainFuckExpression, countOfOperation.get(i)));
                     else
-                        stackArrays.peek().addCommand(new MoveLeft(brainFuckExpression, count));
+                        stackArrays.peek().addCommand(new MoveLeft(brainFuckExpression, countOfOperation.get(i)));
                     break;
                 case '+':
-                    while (i != arr.length - 1 && operation == arr[i + 1]) {
-                        count++;
-                        i++;
-                    }
                     if (stackArrays.isEmpty())
-                        commands.add(new Increment(brainFuckExpression, count));
+                        commands.add(new Increment(brainFuckExpression, countOfOperation.get(i)));
                     else
-                        stackArrays.peek().addCommand(new Increment(brainFuckExpression, count));
+                        stackArrays.peek().addCommand(new Increment(brainFuckExpression, countOfOperation.get(i)));
                     break;
                 case '-':
-                    while (i != arr.length - 1 && operation == arr[i + 1]) {
-                        count++;
-                        i++;
-                    }
                     if (stackArrays.isEmpty())
-                        commands.add(new Dicrement(brainFuckExpression, count));
+                        commands.add(new Dicrement(brainFuckExpression, countOfOperation.get(i)));
                     else
-                        stackArrays.peek().addCommand(new Dicrement(brainFuckExpression, count));
+                        stackArrays.peek().addCommand(new Dicrement(brainFuckExpression, countOfOperation.get(i)));
                     break;
                 case '.':
-                    while (i != arr.length - 1 && operation == arr[i + 1]) {
-                        count++;
-                        i++;
-                    }
                     if (stackArrays.isEmpty())
-                        commands.add(new Print(brainFuckExpression, count));
+                        commands.add(new Print(brainFuckExpression, countOfOperation.get(i)));
                     else
-                        stackArrays.peek().addCommand(new Print(brainFuckExpression, count));
+                        stackArrays.peek().addCommand(new Print(brainFuckExpression, countOfOperation.get(i)));
                     break;
                 case '[':
                     stackArrays.push(new Array(brainFuckExpression));
@@ -80,7 +77,7 @@ public class BrainFuckInvoker {
         }
 
     }
-
+    
 
     public void executeCommands() {
         commands.forEach(Command::execute);
